@@ -1,6 +1,6 @@
 const questions = [
   {
-    question: "Which is larget animal in the world?",
+    question: "Which is largest animal in the world?",
     answers: [
       { text: "Shark", correct: false },
       { text: "Blue whale", correct: true },
@@ -54,24 +54,6 @@ function startQuiz() {
   showQuestion();
 }
 
-function showQuestion() {
-  resetState();
-  let currentQuestion = questions[currentQuestionIndex];
-  let questionNo = currentQuestionIndex + 1;
-  questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
-
-  currentQuestion.answers.forEach((answer) => {
-    const button = document.createElement("button");
-    button.innerHTML = answer.text;
-    button.classList.add("btn");
-    answerBtn.appendChild(button);
-    if (answer.correct) {
-      button.dataset.correct = answer.correct;
-    }
-    button.addEventListener("click", selectAnswer);
-  });
-}
-
 function resetState() {
   nextBtn.style.display = "none";
   while (answerBtn.firstChild) {
@@ -79,43 +61,45 @@ function resetState() {
   }
 }
 
+function showQuestion() {
+  resetState();
+  let currentQuestion = questions[currentQuestionIndex];
+  console.log(currentQuestion);
+  let questionNumber = currentQuestionIndex + 1;
+
+  questionElement.innerHTML = questionNumber + ". " + currentQuestion.question;
+
+  currentQuestion.answers.forEach((answers) => {
+    const button = document.createElement("button");
+    button.innerHTML = answers.text;
+    button.classList.add("btn");
+    answerBtn.appendChild(button);
+
+    if (answers.correct) {
+      button.dataset.correct = answers.correct;
+    }
+    button.addEventListener("click", selectAnswer);
+  });
+}
+
 function selectAnswer(e) {
   const selectedBtn = e.target;
-  const isCorrect = selectedBtn.dataset.correct === "true";
+  console.log(selectedBtn.dataset.correct === "true");
 
-  if (isCorrect) {
+  if (selectedBtn.dataset.correct === "true") {
     selectedBtn.classList.add("correct");
     score++;
+    console.log(score);
   } else {
     selectedBtn.classList.add("incorrect");
   }
-
   Array.from(answerBtn.children).forEach((button) => {
     if (button.dataset.correct === "true") {
       button.classList.add("correct");
     }
-
     button.disabled = true;
   });
-
   nextBtn.style.display = "block";
-}
-
-function showScore() {
-  resetState();
-  questionElement.innerHTML = `You scored ${score} out of ${questions.length}`;
-
-  nextBtn.innerHTML = "Play again";
-  nextBtn.style.display = "block";
-}
-
-function handleNextButton() {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < questions.length) {
-    showQuestion();
-  } else {
-    showScore();
-  }
 }
 
 nextBtn.addEventListener("click", () => {
@@ -125,5 +109,23 @@ nextBtn.addEventListener("click", () => {
     startQuiz();
   }
 });
+
+function handleNextButton() {
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex < questions.length) {
+    showQuestion();
+  } else {
+    showScore();
+  }
+}
+
+function showScore() {
+  resetState();
+  questionElement.innerHTML = `You scored ${score} out of ${questions.length}`;
+  nextBtn.innerHTML = "Play Again!";
+
+  nextBtn.style.display = "block";
+}
 
 startQuiz();
