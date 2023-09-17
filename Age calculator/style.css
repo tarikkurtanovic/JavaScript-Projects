@@ -73,4 +73,10 @@
 
 #result {
   display: none;
+
+  font-size: 20px;
+}
+
+#result span {
+  color: #ffff76;
 }
